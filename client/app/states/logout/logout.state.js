@@ -19,12 +19,19 @@ function StateController (Session, $window) {
   activate()
 
   function activate () {
+    var targetLocation
+    const authType = Session.getAuthType()
     Session.destroy()
     const location = $window.location.href
     if (location.includes(`/ui/service`)) {
-      $window.location.href = `/ui/service/`
+      targetLocation = `/ui/service/`
     } else {
-      $window.location.href = `/`
+      targetLocation = `/`
+    }
+    if ('oidc' == authType) {
+      $window.location.href = '/oidc_login/redirect_uri?logout=' + encodeURI(targetLocation) 
+    } else {
+      $window.location.href = targetLocation
     }
   }
 }

@@ -3,8 +3,10 @@
 export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling) {
   const model = {
     token: null,
-    user: {}
+    user: {},
+    authType: 'local' 
   }
+  const validAuthTypes = ['local', 'oidc', 'saml']
 
   const service = {
     current: model,
@@ -31,6 +33,16 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
     $sessionStorage.token = model.token
   }
 
+  function setAuthType (authType) {
+    if (validAuthTypes.indexOf(authType) !== -1) {
+      model.authType = authType
+    }
+  }
+
+  function getAuthType () {
+    return model.authType
+  }
+
   function setGroup (group) {
     if (typeof group === 'object') {
       model.user.group = group.description
@@ -53,6 +65,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   function destroy () {
     model.token = null
     model.user = {}
+    authType: 'local' 
     destroyWsToken()
     delete $http.defaults.headers.common['X-Auth-Token']
     delete $sessionStorage.miqGroup
