@@ -1,16 +1,16 @@
-import templateUrl from './local_or_oidc_login.html'
+import templateUrl from './local-or-oidc-login.html'
 
 /** @ngInject */
-export function LocalOrLoginState (routerHelper) {
+export function LocalOrOidcLoginState (routerHelper) {
   routerHelper.configureStates(getStates())
 }
 
 function getStates () {
   return {
-    // 'local_or_oidc_login': {
+    // 'local-or-oidc-login': {
     'login': {
       parent: 'blank',
-      url: '/local_or_oidc_login',
+      url: '/local-or-oidc-login',
       templateUrl,
       controller: StateController,
       controllerAs: 'vm',

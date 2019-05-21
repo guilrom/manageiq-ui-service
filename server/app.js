@@ -17,6 +17,19 @@ const app = express()
 const port = process.env.PORT || 3001
 const environment = process.env.NODE_ENV
 
+// Overwriting console.log to log in a file
+
+const fs = require('fs')
+const util = require('util')
+var log_file = fs.createWriteStream(__dirname + '/debug_sui.log', {flags : 'w'})
+var logStdout = process.stdout
+
+console.log = function () {
+  logFile.write(util.format.apply(null, arguments) + '\n')
+  logStdout.write(util.format.apply(null, arguments) + '\n')
+}
+console.error = console.log
+
 // Secure http headers
 app.use(helmet())
 
