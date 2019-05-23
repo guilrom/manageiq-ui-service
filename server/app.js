@@ -21,7 +21,7 @@ const environment = process.env.NODE_ENV
 
 const fs = require('fs')
 const util = require('util')
-var log_file = fs.createWriteStream(__dirname + '/debug_sui.log', {flags : 'w'})
+var logFile = fs.createWriteStream(__dirname + '/debug_sui.log', {flags : 'w'})
 var logStdout = process.stdout
 
 console.log = function () {

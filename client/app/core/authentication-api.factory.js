@@ -10,7 +10,8 @@ function base64encode (str, encoding = 'utf-8') {
 /** @ngInject */
 export function AuthenticationApiFactory ($http, API_BASE, Session, Notifications) {
   var service = {
-    login: login
+    login: login,
+    ssoLogin: ssoLogin
   }
 
   return service
