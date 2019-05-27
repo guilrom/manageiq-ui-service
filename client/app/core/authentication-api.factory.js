@@ -54,7 +54,7 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
     return new Promise((resolve, reject) => {
 
       //fetchRequestHeader(document.location, 'X-REMOTE-USER')
-      $http.get(API_BASE + '/ui/service/oidc_login/redirect_uri?info=json')
+      $http.get(API_BASE + '/oidc_login/redirect_uri?info=json')
       .then(function (result) {
 
           console.log('result.data: ' + result.data)
@@ -63,7 +63,7 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
 
           $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
             headers: {
-              'X-REMOTE-USER': result.data.userinfo.username,
+              'X-REMOTE-USER': 'guilrom',
               'X-Auth-Token': undefined
             }
           }).then(loginSuccess, loginFailure)
