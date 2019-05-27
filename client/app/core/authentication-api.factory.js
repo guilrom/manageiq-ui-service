@@ -53,17 +53,18 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
     return new Promise((resolve, reject) => {
 
       fetchRequestHeader(document.location, 'X-REMOTE-USER')
-      .then(username) {
+      .then(function (username) {
 
-        $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
-          headers: {
-            'X-REMOTE-USER': username, //@temp
-            'X-Auth-Token': undefined
-          }
-        }).then(loginSuccess, loginFailure)
+          $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
+            headers: {
+              'X-REMOTE-USER': username,
+              'X-Auth-Token': undefined
+            }
+          }).then(loginSuccess, loginFailure)
 
-      }
-
+        }, function (errMsg) {
+          reject(errMsg);
+      })
 
       function loginSuccess (response) {
         Session.setAuthToken(response.data.auth_token)
