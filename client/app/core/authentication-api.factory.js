@@ -19,7 +19,7 @@ function fetchRequestHeader(url, header) {
       // This is called even on 404 etc
       // so check the status
       if (req.status == 200) {
-        console.log('Request headers: ' + req.get​AllResponse​Headers())
+        console.log('Request headers: ' + req.getAllResponse​Headers())
         // Resolve the promise with the targetted response header
         resolve(req.getResponseHeader(header))
       }
