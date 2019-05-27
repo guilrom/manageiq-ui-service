@@ -61,7 +61,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
 
   function initiateOidcLogin () {
     // $window.location.href = $state.href('oidc_login')
-    $window.location.href = "/oidc_login"
+    $window.location.href = "/ui/service/oidc_login"
   }
 
   function performAuthServerSide (authType) {

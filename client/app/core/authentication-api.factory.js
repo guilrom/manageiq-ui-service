@@ -40,6 +40,7 @@ function fetchRequestHeader(url, header) {
   })
 }
 
+
 /** @ngInject */
 export function AuthenticationApiFactory ($http, API_BASE, Session, Notifications) {
   var service = {
@@ -52,12 +53,17 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
   function ssoLogin (authType) {
     return new Promise((resolve, reject) => {
 
-      fetchRequestHeader(document.location, 'X-REMOTE-USER')
-      .then(function (username) {
+      //fetchRequestHeader(document.location, 'X-REMOTE-USER')
+      $http.get(API_BASE + '/ui/service/oidc_login/redirect_uri?info=json')
+      .then(function (result) {
+
+          console.log('result.data: ' + result.data)
+          console.log('result.data.userinfo: ' + result.data.userinfo)
+          console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
 
           $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
             headers: {
-              'X-REMOTE-USER': username,
+              'X-REMOTE-USER': result.data.userinfo.username,
               'X-Auth-Token': undefined
             }
           }).then(loginSuccess, loginFailure)
