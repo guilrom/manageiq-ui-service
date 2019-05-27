@@ -10,7 +10,7 @@ function base64encode (str, encoding = 'utf-8') {
 // retrieve a specific header from request to a given url
 function fetchRequestHeader(url, header) { 
   // Return a new promise.
-  return new Promise(function(resolve, reject) => {
+  return new Promise((resolve, reject) => {
     // Do the usual XHR stuff
     var req = new XMLHttpRequest()
     req.open('HEAD', url)
