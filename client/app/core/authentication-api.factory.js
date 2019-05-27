@@ -7,6 +7,39 @@ function base64encode (str, encoding = 'utf-8') {
   return base64js.fromByteArray(bytes)
 }
 
+// retrieve a specific header from request to a given url
+function fetchRequestHeader(url, header) { 
+  // Return a new promise.
+  return new Promise(function(resolve, reject) => {
+    // Do the usual XHR stuff
+    var req = new XMLHttpRequest()
+    req.open('HEAD', url)
+
+    req.onload = function() {
+      // This is called even on 404 etc
+      // so check the status
+      if (req.status == 200) {
+        console.log('Request headers: ' + req.get​AllResponse​Headers())
+        // Resolve the promise with the targetted response header
+        resolve(req.getResponseHeader(header))
+      }
+      else {
+        // Otherwise reject with the status text
+        // which will hopefully be a meaningful error
+        reject(Error(req.statusText))
+      }
+    }
+
+    // Handle network errors
+    req.onerror = function() {
+      reject(Error("Network Error"))
+    }
+
+    // Make the request
+    req.send()
+  })
+}
+
 /** @ngInject */
 export function AuthenticationApiFactory ($http, API_BASE, Session, Notifications) {
   var service = {
@@ -18,11 +51,19 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
 
   function ssoLogin (authType) {
     return new Promise((resolve, reject) => {
-      $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
-        headers: {
-          'X-Auth-Token': undefined
-        }
-      }).then(loginSuccess, loginFailure)
+
+      fetchRequestHeader(document.location, 'X-REMOTE-USER')
+      .then(username) {
+
+        $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
+          headers: {
+            'X-REMOTE-USER': username, //@temp
+            'X-Auth-Token': undefined
+          }
+        }).then(loginSuccess, loginFailure)
+
+      }
+
 
       function loginSuccess (response) {
         Session.setAuthToken(response.data.auth_token)

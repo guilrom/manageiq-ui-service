@@ -74,6 +74,10 @@ switch (environment) {
     })
 
     app.all('*', function (_req, res, _next) {
+      // checking headers
+      console.log('NodeJS Server headers: ' _req.headers)
+      // trying to pass X_REMOTE_USER header to angularjs
+      res.set('X-REMOTE-USER', _req.header('X-REMOTE-USER'))
       // Just send the index.html for other files to support HTML5Mode
       res.sendFile(path.resolve(__dirname, buildOutputPath + '/index.html'))
     })
