@@ -54,21 +54,28 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
     return new Promise((resolve, reject) => {
 
       //fetchRequestHeader(document.location, 'X-REMOTE-USER')
-      $http.get(API_BASE + '/oidc_login/redirect_uri?info=json')
+      // $http.get(API_BASE + '/oidc_login/redirect_uri?info=json')
+      $http.get(API_BASE + '/oidc_login/userinfo')
       .then(function (result) {
 
           console.log('result.data: ' + result.data)
           console.log('result.data.userinfo: ' + result.data.userinfo)
           console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
 
-        }, function (errMsg) {
-          reject(errMsg);
+        }
+        // }, function (errMsg) {
+        //   reject(errMsg);
       })
 
       // @temp
       $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
-        headers: {
-          'X-REMOTE-USER': 'guilrom', //@temp hack
+        headers: { //@temp hack : hardcoded values
+          'X-REMOTE-USER': 'guilrom', 
+          'X-REMOTE-USER-FULLNAME': 'Romain GUILLOT',
+          'X-REMOTE-USER-FIRSTNAME': 'Romain',
+          'X-REMOTE-USER-LASTNAME': 'GUILLOT',
+          'X-REMOTE-USER-EMAIL': 'guilrom@gmail.com',
+          'X-REMOTE-USER-GROUPS': 'EvmGroup-super_administrator, super_administrator',
           'X-Auth-Token': undefined
         }
       }).then(loginSuccess, loginFailure)
