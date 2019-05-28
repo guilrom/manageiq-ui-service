@@ -61,16 +61,17 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           console.log('result.data.userinfo: ' + result.data.userinfo)
           console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
 
-          $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
-            headers: {
-              'X-REMOTE-USER': 'guilrom',
-              'X-Auth-Token': undefined
-            }
-          }).then(loginSuccess, loginFailure)
-
         }, function (errMsg) {
           reject(errMsg);
       })
+
+      // @temp
+      $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
+        headers: {
+          'X-REMOTE-USER': 'guilrom', //@temp hack
+          'X-Auth-Token': undefined
+        }
+      }).then(loginSuccess, loginFailure)
 
       function loginSuccess (response) {
         Session.setAuthToken(response.data.auth_token)
