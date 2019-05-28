@@ -63,9 +63,10 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
 
         }
+      )
         // }, function (errMsg) {
         //   reject(errMsg);
-      })
+      // })
 
       // @temp
       $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
