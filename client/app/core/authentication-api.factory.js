@@ -55,7 +55,7 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
 
       //fetchRequestHeader(document.location, 'X-REMOTE-USER')
       // $http.get(API_BASE + '/oidc_login/redirect_uri?info=json')
-      $http.get(API_BASE + '/oidc_login/userinfo')
+      $http.get(API_BASE + '/oidc_login/redirect_uri/userinfo')
       .then(function (result) {
 
           console.log('result.data: ' + result.data)
