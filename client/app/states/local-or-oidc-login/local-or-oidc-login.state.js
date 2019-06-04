@@ -72,12 +72,14 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     .then(Session.loadUser)
     .then(Session.requestWsToken)
     .then((response) => {
+      console.log('performAuthServerSide > handling requestWsToken response')
       if (angular.isDefined(response)) {
         Language.onLogin(response)
         ApplianceInfo.set(response)
         RBAC.setRole(response.identity.role)
       }
 
+      console.log('performAuthServerSide > is RBAC.suiAuthorized: ', RBAC.suiAuthorized())
       if (RBAC.suiAuthorized()) {
         if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
           $rootScope.notifications.data.splice(0, $rootScope.notifications.data.length)

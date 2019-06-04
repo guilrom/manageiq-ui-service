@@ -76,6 +76,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   }
 
   function loadUser () {
+    console.log('Entering loadUser')
     Polling.start('UserPolling', getUserAuthorizations, 300000)
     return new Promise((resolve, reject) => {
       if (angular.isUndefined($sessionStorage.user)) {
@@ -94,6 +95,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   }
 
   function getUserAuthorizations () {
+    console.log('Entering getUserAuthorizations')
     const config = {
       headers: {
         'X-Auth-Skip-Token-Renewal': 'true'
@@ -102,6 +104,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
 
     return $http.get('/api?attributes=authorization', config)
     .then(function (response) {
+      console.log('getUserAuthorizations > handling api response')
       $sessionStorage.user = angular.toJson(response.data)
       currentUser(response.data.identity)
       setGroup(response.data.identity.group)
@@ -112,8 +115,10 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   }
 
   function requestWsToken (arg) {
+    console.log('Entering requestWsToken')
     return $http.get('/api/auth?requester_type=ws')
     .then(function (response) {
+      console.log('requestWsToken > handling api response and creating cookie')
       destroyWsToken()
       $cookies.put('ws_token', response.data.auth_token, {path: '/ws/notifications'})
 
