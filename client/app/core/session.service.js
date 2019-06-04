@@ -11,6 +11,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   const service = {
     current: model,
     setAuthToken: setAuthToken,
+    getAuthType: getAuthType,
     setGroup: setGroup,
     destroy: destroy,
     active: active,
