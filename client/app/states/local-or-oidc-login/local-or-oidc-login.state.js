@@ -82,6 +82,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
         if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
           $rootScope.notifications.data.splice(0, $rootScope.notifications.data.length)
         }
+        console.log('Authorization OK, redirecting to dashboard')
         $window.location.href = $state.href('dashboard')
       } else {
         Session.privilegesError = true

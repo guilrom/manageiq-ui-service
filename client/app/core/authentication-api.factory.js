@@ -71,6 +71,14 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
       // })
 
       // @temp
+
+      $http.defaults.headers.common['X-REMOTE-USER'] = 'guilrom'
+      $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = 'Romain GUILLOT'
+      $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = 'Romain'
+      $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = 'GUILLOT'
+      $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = 'guilrom@gmail.com'
+      $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = 'EvmGroup-super_administrator, super_administrator'
+
       $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
         headers: { //@temp hack : hardcoded values
           'X-REMOTE-USER': 'guilrom', 
