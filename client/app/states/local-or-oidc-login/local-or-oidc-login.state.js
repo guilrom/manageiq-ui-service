@@ -93,6 +93,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
       }
     })
     .catch((response) => {
+      console.log('External Login failed, sorry.', response)
       if (response.status === 401) {
         const message = response.data.error.message
         Notifications.message('danger', '', __('External Login failed, sorry. ') + `(${message})`, false)

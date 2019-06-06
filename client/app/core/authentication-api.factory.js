@@ -70,6 +70,8 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
         //   reject(errMsg);
       // })
 
+      console.log('Entering in ssoLogin')
+
       // @temp
 
       $http.defaults.headers.common['X-REMOTE-USER'] = 'guilrom'
