@@ -12,7 +12,6 @@ config.plugins.push(
   new webpack.NoEmitOnErrorsPlugin(),
 
   // new webpack.optimize.UglifyJsPlugin(),
-  // new webpack.optimize.UglifyJsPlugin({minimize: false}),
 
   // Cleans previous build
   new CleanWebpackPlugin([config.output.path], {
