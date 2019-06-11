@@ -56,42 +56,47 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
       //fetchRequestHeader(document.location, 'X-REMOTE-USER')
       // $http.get(API_BASE + '/oidc_login/redirect_uri?info=json')
 
-      // $http.get(API_BASE + '/oidc_login/redirect_uri/userinfo')
-      // .then(function (result) {
-
-      //     console.log('result.data: ' + result.data)
-      //     console.log('result.data.userinfo: ' + result.data.userinfo)
-      //     console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
-
-      //   }
-      // )
-
-        // }, function (errMsg) {
-        //   reject(errMsg);
-      // })
-
       console.log('Entering in ssoLogin')
 
-      // @temp
+      $http.get(API_BASE + '/userinfo')
+      .then(function (result) {
 
-      $http.defaults.headers.common['X-REMOTE-USER'] = 'guilrom'
-      $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = 'Romain GUILLOT'
-      $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = 'Romain'
-      $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = 'GUILLOT'
-      $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = 'guilrom@gmail.com'
-      $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = 'EvmGroup-super_administrator, super_administrator'
+          console.log('result.data: ' + result.data)
+          console.log('result.data.userinfo: ' + result.data.userinfo)
+          console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
 
-      $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
-        headers: { //@temp hack : hardcoded values
-          'X-REMOTE-USER': 'guilrom', 
-          'X-REMOTE-USER-FULLNAME': 'Romain GUILLOT',
-          'X-REMOTE-USER-FIRSTNAME': 'Romain',
-          'X-REMOTE-USER-LASTNAME': 'GUILLOT',
-          'X-REMOTE-USER-EMAIL': 'guilrom@gmail.com',
-          'X-REMOTE-USER-GROUPS': 'EvmGroup-super_administrator, super_administrator',
-          'X-Auth-Token': undefined
-        }
-      }).then(loginSuccess, loginFailure)
+          // @temp
+
+          // $http.defaults.headers.common['X-REMOTE-USER'] = 'guilrom'
+          // $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = 'Romain GUILLOT'
+          // $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = 'Romain'
+          // $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = 'GUILLOT'
+          // $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = 'guilrom@gmail.com'
+          // $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = 'EvmGroup-super_administrator, super_administrator'
+
+          $http.defaults.headers.common['X-REMOTE-USER'] = result.data.userinfo.username
+          $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.data.userinfo.fullname
+          $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.data.userinfo.firstname
+          $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.data.userinfo.lastname
+          $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.data.userinfo.email
+          $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.data.userinfo.groups
+
+          $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
+            // headers: { //@temp hack : hardcoded values
+            //   'X-REMOTE-USER': 'guilrom', 
+            //   'X-REMOTE-USER-FULLNAME': 'Romain GUILLOT',
+            //   'X-REMOTE-USER-FIRSTNAME': 'Romain',
+            //   'X-REMOTE-USER-LASTNAME': 'GUILLOT',
+            //   'X-REMOTE-USER-EMAIL': 'guilrom@gmail.com',
+            //   'X-REMOTE-USER-GROUPS': 'EvmGroup-super_administrator, super_administrator',
+            //   'X-Auth-Token': undefined
+            // }
+          }).then(loginSuccess, loginFailure)
+
+        }, function (errMsg) {
+          reject(errMsg);
+      })
+
 
       function loginSuccess (response) {
         console.log("loginSuccess > response.data: ", response.data)

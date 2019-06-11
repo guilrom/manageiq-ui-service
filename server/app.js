@@ -21,7 +21,7 @@ const environment = process.env.NODE_ENV
 
 const fs = require('fs')
 const util = require('util')
-var logFile = fs.createWriteStream(__dirname + '/debug_sui.log', {flags : 'w'})
+var logFile = fs.createWriteStream('/var/www/miq/vmdb/log' + '/debug_sui.log', {flags : 'w'})
 var logStdout = process.stdout
 
 console.log = function () {
@@ -69,15 +69,36 @@ switch (environment) {
       pictureProxy.web(req, res, proxyErrorHandler(req, res))
     })
 
+    app.use('/userinfo', function (req, res) {
+      // checking headers
+      console.log('NodeJS Server headers: ' _req.headers)      
+      // trying to pass X_REMOTE_USER headers
+      res.set({
+          'X-REMOTE-USER': _req.header('HTTP_X_REMOTE_USER'), 
+          'X-REMOTE-USER-FULLNAME': _req.header('HTTP_X_REMOTE_USER_FULLNAME'),
+          'X-REMOTE-USER-FIRSTNAME': _req.header('HTTP_X_REMOTE_USER_FIRSTNAME'),
+          'X-REMOTE-USER-LASTNAME': _req.header('HTTP_X_REMOTE_USER_LASTNAME'),
+          'X-REMOTE-USER-EMAIL': _req.header('HTTP_X_REMOTE_USER_EMAIL'),
+          'X-REMOTE-USER-GROUPS': _req.header('HTTP_X_REMOTE_USER_GROUPS'),
+      })
+      res.type('json')
+      res.send({ userinfo : 
+        {
+          'username': _req.header('HTTP_X_REMOTE_USER'), 
+          'fullname': _req.header('HTTP_X_REMOTE_USER_FULLNAME'),
+          'firstname': _req.header('HTTP_X_REMOTE_USER_FIRSTNAME'),
+          'lastname': _req.header('HTTP_X_REMOTE_USER_LASTNAME'),
+          'email': _req.header('HTTP_X_REMOTE_USER_EMAIL'),
+          'groups': _req.header('HTTP_X_REMOTE_USER_GROUPS')
+        }
+      })
+    })
+
     const pictureProxy = httpProxy.createProxyServer({
       target: 'http://' + proxyHost + '/pictures'
     })
 
     app.all('*', function (_req, res, _next) {
-      // checking headers
-      console.log('NodeJS Server headers: ' _req.headers)
-      // trying to pass X_REMOTE_USER header to angularjs
-      res.set('X-REMOTE-USER', _req.header('X-REMOTE-USER'))
       // Just send the index.html for other files to support HTML5Mode
       res.sendFile(path.resolve(__dirname, buildOutputPath + '/index.html'))
     })
