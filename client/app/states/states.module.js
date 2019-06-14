@@ -9,6 +9,7 @@ import {HelpState} from './help/help.state.js'
 import {LoginState} from './login/login.state.js'
 import {LocalOrOidcLoginState} from './local-or-oidc-login/local-or-oidc-login.state.js'
 import {OidcLoginState} from './local-or-oidc-login/oidc-login.state.js'
+import {OidcUserinfoState} from './local-or-oidc-login/oidc-userinfo.state.js'
 import {LogoutState} from './logout/logout.state.js'
 import {NotFoundState} from './404/404.state.js'
 import {OrdersDetailsState} from './orders/details/details.state.js'
@@ -38,6 +39,7 @@ export const AppRoutingModule = angular
   .run(LoginState)
   .run(LocalOrOidcLoginState)
   .run(OidcLoginState)
+  .run(OidcUserinfoState)
   .run(LogoutState)
   .run(OrdersDetailsState)
   .run(OrdersExplorerState)

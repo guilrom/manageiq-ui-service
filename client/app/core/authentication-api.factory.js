@@ -7,40 +7,6 @@ function base64encode (str, encoding = 'utf-8') {
   return base64js.fromByteArray(bytes)
 }
 
-// retrieve a specific header from request to a given url
-function fetchRequestHeader(url, header) { 
-  // Return a new promise.
-  return new Promise((resolve, reject) => {
-    // Do the usual XHR stuff
-    var req = new XMLHttpRequest()
-    req.open('HEAD', url)
-
-    req.onload = function() {
-      // This is called even on 404 etc
-      // so check the status
-      if (req.status == 200) {
-        console.log('Request headers: ' + req.getAllResponseHeaders())
-        // Resolve the promise with the targetted response header
-        resolve(req.getResponseHeader(header))
-      }
-      else {
-        // Otherwise reject with the status text
-        // which will hopefully be a meaningful error
-        reject(Error(req.statusText))
-      }
-    }
-
-    // Handle network errors
-    req.onerror = function() {
-      reject(Error("Network Error"))
-    }
-
-    // Make the request
-    req.send()
-  })
-}
-
-
 /** @ngInject */
 export function AuthenticationApiFactory ($http, API_BASE, Session, Notifications) {
   var service = {
@@ -53,17 +19,15 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
   function ssoLogin (authType) {
     return new Promise((resolve, reject) => {
 
-      //fetchRequestHeader(document.location, 'X-REMOTE-USER')
-      // $http.get(API_BASE + '/oidc_login/redirect_uri?info=json')
-
       console.log('Entering in ssoLogin')
 
-      $http.get(API_BASE + '/userinfo')
+      $http.get(API_BASE + '/ui/service/oidc_userinfo')
       .then(function (result) {
 
-          console.log('result.data: ' + result.data)
-          console.log('result.data.userinfo: ' + result.data.userinfo)
-          console.log('result.data.userinfo.username: ' + result.data.userinfo.username)
+          console.log('result.data: ', result.data)
+          console.log('result.headers(): ', result.headers())
+          console.log('result.headers(X-REMOTE-USER): ', result.headers('X-REMOTE-USER'))
+          console.log('result.headers(X_REMOTE_USER): ', result.headers('X_REMOTE_USER'))
 
           // @temp
 
@@ -74,12 +38,19 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           // $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = 'guilrom@gmail.com'
           // $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = 'EvmGroup-super_administrator, super_administrator'
 
-          $http.defaults.headers.common['X-REMOTE-USER'] = result.data.userinfo.username
-          $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.data.userinfo.fullname
-          $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.data.userinfo.firstname
-          $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.data.userinfo.lastname
-          $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.data.userinfo.email
-          $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.data.userinfo.groups
+          // $http.defaults.headers.common['X-REMOTE-USER'] = result.data.userinfo.username
+          // $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.data.userinfo.fullname
+          // $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.data.userinfo.firstname
+          // $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.data.userinfo.lastname
+          // $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.data.userinfo.email
+          // $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.data.userinfo.groups
+
+          $http.defaults.headers.common['X-REMOTE-USER'] = result.headers('X-REMOTE-USER')
+          $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.headers('X-REMOTE-USER-FULLNAME')
+          $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.headers('X-REMOTE-USER-FIRSTNAME')
+          $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.headers('X-REMOTE-USER-LASTNAME')
+          $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.headers('X-REMOTE-EMAIL')
+          $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.headers('X-REMOTE-GROUPS')
 
           $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
             // headers: { //@temp hack : hardcoded values

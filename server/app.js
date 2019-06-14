@@ -17,19 +17,6 @@ const app = express()
 const port = process.env.PORT || 3001
 const environment = process.env.NODE_ENV
 
-// Overwriting console.log to log in a file
-
-const fs = require('fs')
-const util = require('util')
-var logFile = fs.createWriteStream('/var/www/miq/vmdb/log' + '/debug_sui.log', {flags : 'w'})
-var logStdout = process.stdout
-
-console.log = function () {
-  logFile.write(util.format.apply(null, arguments) + '\n')
-  logStdout.write(util.format.apply(null, arguments) + '\n')
-}
-console.error = console.log
-
 // Secure http headers
 app.use(helmet())
 
@@ -56,8 +43,8 @@ switch (environment) {
     })
     // Any deep link calls should return index.html
     app.use('/*', express.static('./public/index.html'))
-    break
-  default: {
+  break
+  default:
     const proxyHost = proxyService.proxyHost()
     const proxyErrorHandler = proxyService.proxyErrorHandler
 
@@ -69,31 +56,6 @@ switch (environment) {
       pictureProxy.web(req, res, proxyErrorHandler(req, res))
     })
 
-    app.use('/userinfo', function (req, res) {
-      // checking headers
-      console.log('NodeJS Server headers: ' _req.headers)      
-      // trying to pass X_REMOTE_USER headers
-      res.set({
-          'X-REMOTE-USER': _req.header('HTTP_X_REMOTE_USER'), 
-          'X-REMOTE-USER-FULLNAME': _req.header('HTTP_X_REMOTE_USER_FULLNAME'),
-          'X-REMOTE-USER-FIRSTNAME': _req.header('HTTP_X_REMOTE_USER_FIRSTNAME'),
-          'X-REMOTE-USER-LASTNAME': _req.header('HTTP_X_REMOTE_USER_LASTNAME'),
-          'X-REMOTE-USER-EMAIL': _req.header('HTTP_X_REMOTE_USER_EMAIL'),
-          'X-REMOTE-USER-GROUPS': _req.header('HTTP_X_REMOTE_USER_GROUPS'),
-      })
-      res.type('json')
-      res.send({ userinfo : 
-        {
-          'username': _req.header('HTTP_X_REMOTE_USER'), 
-          'fullname': _req.header('HTTP_X_REMOTE_USER_FULLNAME'),
-          'firstname': _req.header('HTTP_X_REMOTE_USER_FIRSTNAME'),
-          'lastname': _req.header('HTTP_X_REMOTE_USER_LASTNAME'),
-          'email': _req.header('HTTP_X_REMOTE_USER_EMAIL'),
-          'groups': _req.header('HTTP_X_REMOTE_USER_GROUPS')
-        }
-      })
-    })
-
     const pictureProxy = httpProxy.createProxyServer({
       target: 'http://' + proxyHost + '/pictures'
     })
@@ -102,8 +64,7 @@ switch (environment) {
       // Just send the index.html for other files to support HTML5Mode
       res.sendFile(path.resolve(__dirname, buildOutputPath + '/index.html'))
     })
-    break
-  }
+  break
 }
 
 const server = http.createServer(app)
