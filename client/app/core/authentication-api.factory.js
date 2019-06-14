@@ -31,8 +31,8 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.headers('X_REMOTE_USER_FULLNAME')
           $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.headers('X_REMOTE_USER_FIRSTNAME')
           $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.headers('X_REMOTE_USER_LASTNAME')
-          $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.headers('X_REMOTE_EMAIL')
-          $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.headers('X_REMOTE_GROUPS')
+          $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.headers('X_REMOTE_USER_EMAIL')
+          $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.headers('X_REMOTE_USER_GROUPS')
 
           $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
           }).then(loginSuccess, loginFailure)
@@ -43,7 +43,7 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
 
 
       function loginSuccess (response) {
-        
+
         console.log("loginSuccess > response.data: ", response.data)
         console.log("loginSuccess > response.data.auth_token: ", response.data.auth_token)
 
