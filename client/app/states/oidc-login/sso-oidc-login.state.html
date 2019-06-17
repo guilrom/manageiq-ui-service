@@ -1,0 +1,25 @@
+<div class="login-pf">
+  <img class="img-top" src="./images/bg-login.png" alt="top-corner"/>
+  <img class="img-bottom" src="./images/bg-login-2.png" alt=" bottom-corner"/>
+  <span id="badge">
+    <img class="logo" ng-src="{{ vm.brandInfo.logo }}" alt="Logo"/>
+  </span>
+  <div class="container">
+    <div id="brand">
+      <img ng-src="{{ vm.brandInfo.brand }}" alt="Brand" />
+    </div>
+    <div class="row">
+      <div class="col-sm-8 col-md-6 col-lg-5">
+        <pf-notification-list></pf-notification-list>
+        <p>Authentification au système d'entreprise :</p>
+        <button type="button" class="btn btn-primary" ng-click="vm.initiateOidcLogin()" translate>Accès à l'interface utilisateur</button>
+        <hr>
+        <button type="button" class="btn btn-primary" ng-click="vm.initiateAdminOidcLogin()" translate>Accès à l'Interface administrateur</button>
+
+      </div>
+      <div class="col-sm-4 col-md-6 col-lg-7">
+        <p ng-bind-html="vm.text.message"></p>
+      </div>
+    </div>
+  </div>
+</div>

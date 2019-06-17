@@ -36,3 +36,7 @@ zanata.local.json
 
 ### Git Version file ###
 client/version/version.json
+
+### Various ###
+.DS_Store
+*/.DS_Store
