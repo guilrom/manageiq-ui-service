@@ -1,7 +1,7 @@
 import templateUrl from './sso-oidc-login.html'
 
 /** @ngInject */
-export function LocalOrOidcLoginState (routerHelper) {
+export function SsoOidcLoginState (routerHelper) {
   routerHelper.configureStates(getStates())
 }
 
