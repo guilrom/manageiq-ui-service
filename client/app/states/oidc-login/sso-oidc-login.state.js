@@ -33,7 +33,6 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     login: API_LOGIN,
     password: API_PASSWORD
   }
-  vm.onSubmit = onSubmit
   vm.initiateOidcLogin = initiateOidcLogin
   vm.initiateAdminOidcLogin = initiateAdminOidcLogin
 
