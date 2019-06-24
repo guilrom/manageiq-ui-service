@@ -2,19 +2,20 @@
   <img class="img-top" src="./images/bg-login.png" alt="top-corner"/>
   <img class="img-bottom" src="./images/bg-login-2.png" alt=" bottom-corner"/>
   <span id="badge">
-    <img class="logo" ng-src="{{ vm.brandInfo.logo }}" alt="Logo"/>
+    <img class="logo" src="./images/login-screen-logo.png" alt="Logo"/>
   </span>
   <div class="container">
     <div id="brand">
-      <img ng-src="{{ vm.brandInfo.brand }}" alt="Brand" />
+      <!-- <img ng-src="{{ vm.brandInfo.brand }}" alt="Brand" /> -->
+      <h1>Bienvenue sur le portail Nuage</h1>
     </div>
     <div class="row">
       <div class="col-sm-8 col-md-6 col-lg-5">
         <pf-notification-list></pf-notification-list>
-        <p>Authentification au système d'entreprise :</p>
-        <button type="button" class="btn btn-primary" ng-click="vm.initiateOidcLogin()" translate>Accès à l'interface utilisateur</button>
-        <hr>
-        <button type="button" class="btn btn-primary" ng-click="vm.initiateAdminOidcLogin()" translate>Accès à l'Interface administrateur</button>
+        <h2>Authentifiez-vous avec votre compte LDAP :</h2>
+        <button type="button" class="btn btn-primary" ng-click="vm.initiateOidcLogin()" translate>Interface utilisateur</button>
+        &nbsp; | &nbsp;
+        <a href="javscript:void(0)" ng-click="vm.initiateAdminOidcLogin()" translate>Interface administrateur</a>
 
       </div>
       <div class="col-sm-4 col-md-6 col-lg-7">

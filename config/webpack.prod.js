@@ -24,7 +24,7 @@ config.plugins.push(
     template: '../client/index.ejs'
   }),
 
-  new OptimizeCssAssetsWebpackPlugin()
+  // new OptimizeCssAssetsWebpackPlugin()
 )
 
 module.exports = config
