@@ -7,15 +7,15 @@
   <div class="container">
     <div id="brand">
       <!-- <img ng-src="{{ vm.brandInfo.brand }}" alt="Brand" /> -->
-      <h1>Bienvenue sur le portail Nuage</h1>
+      <h1 translate>Bienvenue sur le <b>Portail Nuage</b> !</h1>
     </div>
     <div class="row">
       <div class="col-sm-8 col-md-6 col-lg-5">
         <pf-notification-list></pf-notification-list>
-        <h2>Authentifiez-vous avec votre compte LDAP :</h2>
+        <h3 translate>Authentifiez-vous avec votre compte LDAP :</h3>
         <button type="button" class="btn btn-primary" ng-click="vm.initiateOidcLogin()" translate>Interface utilisateur</button>
         &nbsp; | &nbsp;
-        <a href="javscript:void(0)" ng-click="vm.initiateAdminOidcLogin()" translate>Interface administrateur</a>
+        <a href ng-click="vm.initiateAdminOidcLogin()" translate>Interface administrateur</a>
 
       </div>
       <div class="col-sm-4 col-md-6 col-lg-7">
