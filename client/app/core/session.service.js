@@ -71,7 +71,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   function destroy () {
     model.token = null
     model.user = {}
-    model.authType: 'local' 
+    model.authType = 'local' 
     destroyWsToken()
     delete $http.defaults.headers.common['X-Auth-Token']
     delete $sessionStorage.miqGroup
