@@ -38,10 +38,14 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   function setAuthType (authType) {
     if (validAuthTypes.indexOf(authType) !== -1) {
       model.authType = authType
+      $sessionStorage.authType = model.authType
     }
   }
 
   function getAuthType () {
+    if (validAuthTypes.indexOf($sessionStorage.authType) !== -1) {
+      model.authType = $sessionStorage.authType
+    }
     return model.authType
   }
 
@@ -67,7 +71,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
   function destroy () {
     model.token = null
     model.user = {}
-    authType: 'local' 
+    model.authType: 'local' 
     destroyWsToken()
     delete $http.defaults.headers.common['X-Auth-Token']
     delete $sessionStorage.miqGroup
@@ -75,6 +79,7 @@ export function SessionFactory ($http, $sessionStorage, $cookies, RBAC, Polling)
     delete $sessionStorage.token
     delete $sessionStorage.user
     delete $sessionStorage.applianceInfo
+    delete $sessionStorage.authType
   }
 
   function loadUser () {
