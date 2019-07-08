@@ -26,13 +26,14 @@ function getStates () {
 function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, AuthenticationApi, Session, $rootScope, Notifications, Language, ApplianceInfo, CollectionsApi) {
   const vm = this
 
-  getBrand()
+  getProductInfo()
 
   vm.text = Text.login
   vm.credentials = {
     login: API_LOGIN,
     password: API_PASSWORD
   }
+  vm.onSubmit = onSubmit
   vm.initiateOidcLogin = initiateOidcLogin
   vm.initiateAdminOidcLogin = initiateAdminOidcLogin
 
@@ -50,8 +51,17 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
   // Handling Ext login callback
   if ($window.location.href.includes('?ensureAuthServerSide')) {
     // @todo: check if not already authenticated
-    const authType = 'oidc'
-    performAuthServerSide(authType)
+    console.log('vm.authMode: ', vm.authMode)
+    if (vm.authMode.oidc_enabled) {
+      const authType = 'oidc'
+    } else if (vm.authMode.saml_enabled) {
+      const authType = 'saml'
+    } else {
+      const authType = null
+    }
+    if (null !== authType) {
+      performExtAuthServerSide(authType)
+    }
   }
 
   if (Session.privilegesError) {
@@ -67,7 +77,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     $window.location.href = '/'
   }
 
-  function performAuthServerSide (authType) {
+  function performExtAuthServerSide (authType) {
     Session.timeoutNotified = false
     Session.privilegesError = false
 
@@ -103,9 +113,47 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     })
   }
 
-  function getBrand () {
+  function onSubmit () {
+    Session.timeoutNotified = false
+    Session.privilegesError = false
+
+    return AuthenticationApi.login(vm.credentials.login, vm.credentials.password)
+    .then(Session.loadUser)
+    .then(Session.requestWsToken)
+    .then((response) => {
+      if (angular.isDefined(response)) {
+        Language.onLogin(response)
+        ApplianceInfo.set(response)
+        RBAC.setRole(response.identity.role)
+      }
+
+      if (RBAC.suiAuthorized()) {
+        if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
+          $rootScope.notifications.data.splice(0, $rootScope.notifications.data.length)
+        }
+        $window.location.href = $state.href('dashboard')
+      } else {
+        Session.privilegesError = true
+        Notifications.error(__('You do not have permission to view the Service UI. Contact your administrator to update your group permissions.'))
+        Session.destroy()
+      }
+    })
+    .catch((response) => {
+      if (response.status === 401) {
+        vm.credentials.login = ''
+        vm.credentials.password = ''
+        const message = response.data.error.message
+        Notifications.message('danger', '', __('Login failed, possibly invalid credentials. ') + `(${message})`, false)
+      }
+      Session.destroy()
+    })
+  }
+
+
+  function getProductInfo () {
     CollectionsApi.query('product_info').then((response) => {
       vm.brandInfo = response.branding_info
+      vm.authMode = response.auth_mode
       $rootScope.favicon = vm.brandInfo.favicon
     })
   }
