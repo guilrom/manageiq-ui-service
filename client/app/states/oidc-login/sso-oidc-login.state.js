@@ -26,7 +26,7 @@ function getStates () {
 function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, AuthenticationApi, Session, $rootScope, Notifications, Language, ApplianceInfo, CollectionsApi) {
   const vm = this
 
-  getProductInfo()
+  init()
 
   vm.text = Text.login
   vm.credentials = {
@@ -48,22 +48,6 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     Session.setPause(pauseLength)
   }
 
-  // Handling Ext login callback
-  if ($window.location.href.includes('?ensureAuthServerSide')) {
-    // @todo: check if not already authenticated
-    console.log('vm.authMode: ', vm.authMode)
-    if (vm.authMode.oidc_enabled) {
-      const authType = 'oidc'
-    } else if (vm.authMode.saml_enabled) {
-      const authType = 'saml'
-    } else {
-      const authType = null
-    }
-    if (null !== authType) {
-      performExtAuthServerSide(authType)
-    }
-  }
-
   if (Session.privilegesError) {
     Notifications.error(__('User does not have privileges to login.'))
     Session.destroy()
@@ -75,6 +59,23 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
   }
   function initiateAdminOidcLogin () {
     $window.location.href = '/'
+  }
+
+  function ensureAuthServerSide () {
+    // Handling Ext login callback
+    if ($window.location.href.includes('?ensureAuthServerSide')) {
+      // @todo: check if not already authenticated
+      if (vm.authMode.oidc_enabled) {
+        const authType = 'oidc'
+      } else if (vm.authMode.saml_enabled) {
+        const authType = 'saml'
+      } else {
+        const authType = null
+      }
+      if (null !== authType) {
+        performExtAuthServerSide(authType)
+      }
+    }
   }
 
   function performExtAuthServerSide (authType) {
@@ -149,12 +150,12 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     })
   }
 
-
-  function getProductInfo () {
+  function init () {
     CollectionsApi.query('product_info').then((response) => {
       vm.brandInfo = response.branding_info
-      vm.authMode = response.auth_mode
       $rootScope.favicon = vm.brandInfo.favicon
+      vm.authMode = response.auth_mode
+      ensureAuthServerSide()
     })
   }
 }
