@@ -48,6 +48,10 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
     Session.setPause(pauseLength)
   }
 
+  if ($window.location.href.includes('?ensureAuthServerSide')) {
+    vm.ensureAuthServerSide = true
+  }  
+
   if (Session.privilegesError) {
     Notifications.error(__('User does not have privileges to login.'))
     Session.destroy()
@@ -63,7 +67,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
 
   function ensureAuthServerSide () {
     // Handling Ext login callback
-    if ($window.location.href.includes('?ensureAuthServerSide')) {
+    if (vm.ensureAuthServerSide) {
       // @todo: check if not already authenticated
       if (vm.authMode.oidc_enabled) {
         const authType = 'oidc'
@@ -74,6 +78,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
       }
       if (null !== authType) {
         performExtAuthServerSide(authType)
+        vm.ensureAuthServerSide = false
       }
     }
   }
