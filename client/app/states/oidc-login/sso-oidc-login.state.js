@@ -68,13 +68,12 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
   function ensureAuthServerSide () {
     // Handling Ext login callback
     if (vm.ensureAuthServerSide) {
+      let authType = null
       // @todo: check if not already authenticated
       if (vm.authMode.oidc_enabled) {
-        const authType = 'oidc'
+        authType = 'oidc'
       } else if (vm.authMode.saml_enabled) {
-        const authType = 'saml'
-      } else {
-        const authType = null
+        authType = 'saml'
       }
       if (null !== authType) {
         performExtAuthServerSide(authType)
