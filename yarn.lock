@@ -104,10 +104,10 @@
     glob "^7.1.1"
     json-server "^0.9.6"
 
-"@manageiq/ui-components@1.1.25":
-  version "1.1.25"
-  resolved "https://registry.yarnpkg.com/@manageiq/ui-components/-/ui-components-1.1.25.tgz#415da7eb78f6aa534b97a2ac04c81a280b43bbc9"
-  integrity sha512-hTNP6uWsMehYr2qC2UZ7UF/c2pb1hzO4DMFYblHDZ5p2NWMbjccjeof8zW81/LN3+nJZ77QTkvPAJ+YHa9wS5A==
+"@manageiq/ui-components@1.1.30":
+  version "1.1.30"
+  resolved "https://registry.yarnpkg.com/@manageiq/ui-components/-/ui-components-1.1.30.tgz#33d122e11afc5b7b88a2fe75b06150ac64d193af"
+  integrity sha512-FNR6GZ+aBc9qvDqtrEQXkO4pC3WXcMob4yf6/j024eibNuz1uf1e5FIHZPT5TytEX3MPgwum+1ZvayEisX5rKQ==
   dependencies:
     angular-bootstrap-switch "^0.5.1"
     angular-dragdrop "^1.0.13"
