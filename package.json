@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@manageiq/font-fabulous": "1.0.3",
-    "@manageiq/ui-components": "1.2.4",
+    "@manageiq/ui-components": "1.2.8",
     "@uirouter/angularjs": "1.0.20",
     "actioncable": "5.2.1",
     "angular": "1.7.5",
@@ -104,7 +104,6 @@
     "text-encoder-lite": "coolaj86/TextEncoderLite#e1e031b",
     "ts-loader": "3.5.0",
     "typescript": "2.9.2",
-    "ui-select": "0.19.8",
     "url-loader": "0.6.2",
     "webpack": "3.11.0"
   },
