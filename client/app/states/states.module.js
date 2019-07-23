@@ -7,9 +7,8 @@ import {DashboardState} from './dashboard/dashboard.state.js'
 import {ErrorState} from './error/error.state.js'
 import {HelpState} from './help/help.state.js'
 import {LoginState} from './login/login.state.js'
-import {OidcLoginState} from './oidc-login/oidc-login.state.js'
-import {SsoOidcLoginState} from './oidc-login/sso-oidc-login.state.js'
-import {OidcUserinfoState} from './oidc-login/oidc-userinfo.state.js'
+import {OidcLoginState} from './oidc/oidc-login.state.js'
+import {OidcUserinfoState} from './oidc/oidc-userinfo.state.js'
 import {LogoutState} from './logout/logout.state.js'
 import {NotFoundState} from './404/404.state.js'
 import {OrdersDetailsState} from './orders/details/details.state.js'
@@ -38,7 +37,6 @@ export const AppRoutingModule = angular
   .run(HelpState)
   .run(LoginState)
   .run(OidcLoginState)
-  .run(SsoOidcLoginState)
   .run(OidcUserinfoState)
   .run(LogoutState)
   .run(OrdersDetailsState)

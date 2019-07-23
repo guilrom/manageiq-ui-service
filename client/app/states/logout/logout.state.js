@@ -20,8 +20,8 @@ function StateController (Session, API_BASE, $window) {
 
   function activate () {
     var targetLocation
-    const authType = Session.getAuthType()
-    console.log('authType: ', authType)
+    const authMode = Session.getAuthMode()
+    console.log('authMode: ', authMode)
     Session.destroy()
     const location = $window.location.href
     if (location.includes(`/ui/service`)) {
@@ -29,8 +29,11 @@ function StateController (Session, API_BASE, $window) {
     } else {
       targetLocation = `/`
     }
-    if ('oidc' == authType) {
+    if ('oidc' == authMode) {
       $window.location.href = '/oidc_login/redirect_uri?logout=' + encodeURI(API_BASE + targetLocation) 
+    } elseif ('saml' == authMode) {
+      // @todo
+      $window.location.href = targetLocation
     } else {
       $window.location.href = targetLocation
     }

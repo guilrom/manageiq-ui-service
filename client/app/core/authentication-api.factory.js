@@ -1,5 +1,6 @@
 import base64js from 'base64-js'
 const TextEncoderLite = require('text-encoder-lite').TextEncoderLite
+const ssoAuthModes = ['oidc', 'saml']
 
 // utf8-capable window.btoa
 function base64encode (str, encoding = 'utf-8') {
@@ -7,33 +8,70 @@ function base64encode (str, encoding = 'utf-8') {
   return base64js.fromByteArray(bytes)
 }
 
+
 /** @ngInject */
 export function AuthenticationApiFactory ($http, API_BASE, Session, Notifications) {
+
+  const self = this
+  self.currentAuthMode = null
   var service = {
+    globalLogin: globalLogin,
     login: login,
     ssoLogin: ssoLogin
   }
 
   return service
 
-  function ssoLogin (authType) {
+  function loginSuccess (response) {
+
+    console.log("loginSuccess > response.data: ", response.data)
+    console.log("loginSuccess > response.data.auth_token: ", response.data.auth_token)
+
+    Session.setAuthToken(response.data.auth_token)
+    Session.setAuthMode(self.currentAuthMode)
+    resolve(response)
+  }
+
+  function loginFailure (response) {
+    Session.destroy()
+    reject(response)
+  }
+
+  function updateSsoHeaders (result) {
+    $http.defaults.headers.common['X-REMOTE-USER'] = result.headers('X_REMOTE_USER')
+    $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.headers('X_REMOTE_USER_FULLNAME')
+    $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.headers('X_REMOTE_USER_FIRSTNAME')
+    $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.headers('X_REMOTE_USER_LASTNAME')
+    $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.headers('X_REMOTE_USER_EMAIL')
+    $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.headers('X_REMOTE_USER_GROUPS')
+  }
+
+  function globalLogin (authMode, userLogin, password) {
+    if (ssoAuthModes.indexOf(authMode) !== -1){
+      self.currentAuthMode = authMode
+      return ssoLogin()
+    } else {
+      self.currentAuthMode = 'local'
+      return login(userLogin, password)
+    }
+  }
+
+  // External (SSO) Authentication
+  function ssoLogin () {
     return new Promise((resolve, reject) => {
 
       console.log('Entering in ssoLogin')
 
+      // First, let's retrieve SSO user info 
       $http.get(API_BASE + '/ui/service/oidc_userinfo')
       .then(function (result) {
 
           console.log('result.data: ', result.data)
           console.log('result.headers(): ', result.headers())
 
-          $http.defaults.headers.common['X-REMOTE-USER'] = result.headers('X_REMOTE_USER')
-          $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.headers('X_REMOTE_USER_FULLNAME')
-          $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.headers('X_REMOTE_USER_FIRSTNAME')
-          $http.defaults.headers.common['X-REMOTE-USER-LASTNAME'] = result.headers('X_REMOTE_USER_LASTNAME')
-          $http.defaults.headers.common['X-REMOTE-USER-EMAIL'] = result.headers('X_REMOTE_USER_EMAIL')
-          $http.defaults.headers.common['X-REMOTE-USER-GROUPS'] = result.headers('X_REMOTE_USER_GROUPS')
+          updateSsoHeaders(result)
 
+          // Then we can perform an SSO auth API request
           $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
           }).then(loginSuccess, loginFailure)
 
@@ -41,24 +79,10 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           reject(errMsg);
       })
 
-
-      function loginSuccess (response) {
-
-        console.log("loginSuccess > response.data: ", response.data)
-        console.log("loginSuccess > response.data.auth_token: ", response.data.auth_token)
-
-        Session.setAuthToken(response.data.auth_token)
-        Session.setAuthType(authType)
-        resolve(response)
-      }
-
-      function loginFailure (response) {
-        Session.destroy()
-        reject(response)
-      }
     })
   }
 
+  // Local authentication
   function login (userLogin, password) {
     return new Promise((resolve, reject) => {
       $http.get(API_BASE + '/api/auth?requester_type=ui', {
@@ -67,16 +91,6 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           'X-Auth-Token': undefined
         }
       }).then(loginSuccess, loginFailure)
-
-      function loginSuccess (response) {
-        Session.setAuthToken(response.data.auth_token)
-        resolve(response)
-      }
-
-      function loginFailure (response) {
-        Session.destroy()
-        reject(response)
-      }
     })
   }
 }
