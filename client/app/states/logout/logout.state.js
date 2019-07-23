@@ -31,7 +31,7 @@ function StateController (Session, API_BASE, $window) {
     }
     if ('oidc' == authMode) {
       $window.location.href = '/oidc_login/redirect_uri?logout=' + encodeURI(API_BASE + targetLocation) 
-    } elseif ('saml' == authMode) {
+    } else if ('saml' == authMode) {
       // @todo
       $window.location.href = targetLocation
     } else {
