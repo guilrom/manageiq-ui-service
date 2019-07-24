@@ -85,7 +85,7 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
   }
 
   function finalizeAuthServerSide () {
-    if checkIfServerSideAuthRequired() {
+    if (checkIfServerSideAuthRequired()) {
       return AuthenticateUser() 
     }
   }
