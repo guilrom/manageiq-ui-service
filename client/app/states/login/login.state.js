@@ -58,8 +58,8 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
   }
 
   function initiateOidcLogin () {
-    $state.go('oidc-login', { needToFinalizeAuthServerSide: 1 })
-    // $window.location.href = '/ui/service/oidc_login?needToFinalizeAuthServerSide'
+    // $state.go('oidc-login', { needToFinalizeAuthServerSide: 1 })
+    $window.location.href = '/ui/service/oidc_login?needToFinalizeAuthServerSide'
   }
   function initiateSamlLogin () {
     // @todo
