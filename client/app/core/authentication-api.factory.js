@@ -22,21 +22,6 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
 
   return service
 
-  function loginSuccess (response) {
-
-    console.log("loginSuccess > response.data: ", response.data)
-    console.log("loginSuccess > response.data.auth_token: ", response.data.auth_token)
-
-    Session.setAuthToken(response.data.auth_token)
-    Session.setAuthMode(self.currentAuthMode)
-    resolve(response)
-  }
-
-  function loginFailure (response) {
-    Session.destroy()
-    reject(response)
-  }
-
   function updateSsoHeaders (result) {
     $http.defaults.headers.common['X-REMOTE-USER'] = result.headers('X_REMOTE_USER')
     $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.headers('X_REMOTE_USER_FULLNAME')
@@ -76,11 +61,23 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           }).then(loginSuccess, loginFailure)
 
         }, function (errMsg) {
-          reject(errMsg);
+          reject(errMsg)
       })
 
-    })
-  }
+      function loginSuccess (response) {
+        console.log("ssoLogin > loginSuccess > response.data: ", response.data)
+        Session.setAuthToken(response.data.auth_token)
+        Session.setAuthMode(self.currentAuthMode)
+        resolve(response)
+      }
+
+      function loginFailure (response) {
+        Session.destroy()
+        reject(response)
+      }
+
+        })
+      }
 
   // Local authentication
   function login (userLogin, password) {
@@ -91,6 +88,19 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
           'X-Auth-Token': undefined
         }
       }).then(loginSuccess, loginFailure)
+
+      function loginSuccess (response) {
+        console.log("login > loginSuccess > response.data: ", response.data)
+        Session.setAuthToken(response.data.auth_token)
+        Session.setAuthMode(self.currentAuthMode)
+        resolve(response)
+      }
+
+      function loginFailure (response) {
+        Session.destroy()
+        reject(response)
+      }
+
     })
   }
 }
