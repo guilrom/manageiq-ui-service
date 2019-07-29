@@ -9,6 +9,10 @@
 
 The Service UI (SUI), previously Self Service UI (SSUI), for the [ManageIQ](http://github.com/ManageIQ/manageiq) project.
 
+## Forked project
+
+This fork of the official manageiq-ui-service aimes at adding support for SSO (SAML, OIDC) user authentication in the Service UI (SUI). It requires  https://github.com/guilrom/manageiq-api forked version of the original manageiq-api plugin, which is based on this PR https://github.com/ManageIQ/manageiq/pull/14959/files by Abellotti.
+
 ## Documentation
 * [Developer Setup](docs/developer_setup.md) - *_For getting started_*
 * [Code Tour](docs/code_tour.md) - *_For codebase awareness_*

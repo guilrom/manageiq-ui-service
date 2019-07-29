@@ -23,6 +23,7 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
   return service
 
   function updateSsoHeaders (result) {
+    // @note: maybe we do not need to set headers "permanently" like this?
     $http.defaults.headers.common['X-REMOTE-USER'] = result.headers('X_REMOTE_USER')
     $http.defaults.headers.common['X-REMOTE-USER-FULLNAME'] = result.headers('X_REMOTE_USER_FULLNAME')
     $http.defaults.headers.common['X-REMOTE-USER-FIRSTNAME'] = result.headers('X_REMOTE_USER_FIRSTNAME')
@@ -50,12 +51,7 @@ export function AuthenticationApiFactory ($http, API_BASE, Session, Notification
       // First, let's retrieve SSO user info 
       $http.get(API_BASE + '/ui/service/oidc_userinfo')
       .then(function (result) {
-
-          console.log('result.data: ', result.data)
-          console.log('result.headers(): ', result.headers())
-
           updateSsoHeaders(result)
-
           // Then we can perform an SSO auth API request
           $http.get(API_BASE + '/api/sso/auth?requester_type=ui', {
           }).then(loginSuccess, loginFailure)

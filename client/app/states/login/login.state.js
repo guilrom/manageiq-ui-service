@@ -112,7 +112,6 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
         if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
           $rootScope.notifications.data.splice(0, $rootScope.notifications.data.length)
         }
-        console.log('Authorization OK, redirecting to dashboard')
         $window.location.href = $state.href('dashboard')
       } else {
         Session.privilegesError = true
@@ -124,7 +123,6 @@ function StateController ($window, $state, Text, RBAC, API_LOGIN, API_PASSWORD, 
       }
     })
     .catch((response) => {
-      console.log('Login failed, sorry.', response)
       if (response.status === 401) {
         if (null === vm.extAuthMode) {
           vm.credentials.login = ''
